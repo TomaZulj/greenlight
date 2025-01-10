@@ -10,6 +10,8 @@ import (
 	"os"
 	"time"
 
+	"greenlight.alexedwards.net/internal/data"
+
 	_ "github.com/lib/pq"
 )
 
@@ -29,6 +31,7 @@ type config struct {
 type application struct {
 	config config
 	logger *slog.Logger
+	models data.Models
 }
 
 func main() {
@@ -55,11 +58,10 @@ func main() {
 
 	logger.Info("database connection pool established")
 
-	// Declare an instance of the application struct, containing the config struct and
-	// the logger.
 	app := &application{
 		config: cfg,
 		logger: logger,
+		models: data.NewModels(db),
 	}
 
 	srv := &http.Server{
